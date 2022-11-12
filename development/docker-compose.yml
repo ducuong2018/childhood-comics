@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+  fe:
+    build:
+      context: ../fe
+      dockerfile: ./Dockerfile
+    ports:
+      - 3321:3321
+    volumes:
+      - ../fe:/fe
+    container_name: fe
+    networks:
+      - nuxt-network
+  # api:
+  #   build:
+  #     context: ../api
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - 3333:3333
+  #   volumes:
+  #     - ../api:/api
+  #   container_name: api
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: comics
+      MYSQL_PASSWORD: Rg2mcVPg
+      MYSQL_ROOT_PASSWORD: Rg2mcVPg
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./sql/mysql:/var/lib/mysql
+      - ./sql/mysql-dump:/var/backups
+    ports:
+      - 127.0.0.1:3311:3306
+    container_name: comics
+volumes:
+  sk_mysql_data:
+    driver: local
+
+networks:
+  nuxt-network:
+    driver: bridge
